@@ -28,7 +28,14 @@ private object TestScenarios {
         val solver = solverCache[rootPath + scenario.filename]
         val path = solver.solve(scenario.start, scenario.end)
 
-        assert(path.last().gScore <= scenario.score + 1e-6)
+        val score = path.last().gScore
+        val diff = scenario.score - score
+
+        // if our solution is worse, ignore rounding errors
+        if (diff < -1e-6) throw Exception("Solution is worse! ${scenario.score} < $score")
+
+        // if our solution is better, improvements should not be too big
+        if (diff / scenario.score > 0.16) throw Exception("Solution seems too good to be true! ${scenario.score} > $score")
     }
 
     private fun load(f: File): Collection<Scenario> = f.bufferedReader().use { reader ->
