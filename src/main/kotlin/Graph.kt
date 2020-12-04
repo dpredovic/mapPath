@@ -10,7 +10,7 @@ data class PathNode<T>(val data: T) {
 data class Distance(val index: Int, val d: Double)
 
 /**
- * A general A* implementation with classic Dijkstra algorithm as a special case for h(m) = 0.0
+ * A general A* implementation with classic Dijkstra algorithm as a special case for h(n) = 0.0
  * @see <a href="https://en.wikipedia.org/wiki/A*_search_algorithm">A*</a>
  *
  */
@@ -52,9 +52,9 @@ class Graph<T>(private val data: List<T>, private val distances: List<Iterable<D
         return traceback(nodes[goal])
     }
 
-    private fun traceback(target: PathNode<T>): List<PathNode<T>> {
-        var pathNode: PathNode<T>? = target
+    private fun traceback(target: PathNode<T>?): List<PathNode<T>> {
         val path = mutableListOf<PathNode<T>>()
+        var pathNode = target
         while (pathNode != null) {
             path += pathNode
             pathNode = pathNode.cameFrom

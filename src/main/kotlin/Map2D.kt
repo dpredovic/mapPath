@@ -30,7 +30,7 @@ class Map2D(fileName: String) {
 
     val maxDistance get() = mapDistance(Point(0, 0), Point(xRange.last, yRange.last))
 
-    fun distance(p: Point, np: Point) = if (p.x == np.x || p.y == np.y) 1.0 else diagonalLength
+    fun distance(p1: Point, p2: Point) = if (p1.x == p2.x || p1.y == p2.y) 1.0 else diagonalLength
 
     fun mapDistance(p1: Point, p2: Point): Double = sqrt(square(p1.x - p2.x) + square(p1.y - p2.y))
 
