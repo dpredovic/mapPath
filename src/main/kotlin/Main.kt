@@ -17,10 +17,10 @@ private object TestScenarios {
     }
 
     private fun solve(scenarios: Collection<Scenario>, name: String) {
-        ProgressBar.wrap(
-            scenarios.parallelStream(),
+        val pbb =
             ProgressBarBuilder().setTaskName(name).showSpeed().setConsumer(ConsoleProgressBarConsumer(System.out, 120))
-        ).forEach { solve(it) }
+                .setUpdateIntervalMillis(100)
+        ProgressBar.wrap(scenarios.parallelStream(), pbb).forEach { solve(it) }
         solverCache.clear()
     }
 
