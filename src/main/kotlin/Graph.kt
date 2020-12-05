@@ -40,9 +40,7 @@ class Graph<T>(private val data: List<T>, private val distances: List<Iterable<D
 
         while (true) {
             val current = openSet.poll()
-            if (current.index == goal) {
-                break
-            }
+            if (current.index == goal) break
 
             distances[current.index].forEach {
                 val tentativeGScore = current.value.gScore + it.d

@@ -1,4 +1,5 @@
 import java.io.File
+import kotlin.math.absoluteValue
 import kotlin.math.sqrt
 
 data class Point(val x: Int, val y: Int)
@@ -28,11 +29,11 @@ class Map2D(fileName: String) {
 
     val traversablePoints get() = points.filter { !isBlock(it) }
 
-    val maxDistance get() = mapDistance(Point(0, 0), Point(xRange.last, yRange.last))
-
     fun distance(p1: Point, p2: Point) = if (p1.x == p2.x || p1.y == p2.y) 1.0 else diagonalLength
 
-    fun mapDistance(p1: Point, p2: Point): Double = sqrt(square(p1.x - p2.x) + square(p1.y - p2.y))
+    fun euclideanDistance(p1: Point, p2: Point): Double = sqrt(square(p1.x - p2.x) + square(p1.y - p2.y))
+    fun manhattanDistance(p1: Point, p2: Point): Double =
+        ((p1.x - p2.x).absoluteValue + (p1.y - p2.y).absoluteValue).toDouble()
 
     fun neighbors(p: Point): List<Point> = (-1..1).filter { dy -> p.y + dy in yRange }.flatMap { dy ->
         (-1..1).filter { dx -> p.x + dx in xRange }.map { dx ->
