@@ -1,10 +1,20 @@
 import java.util.PriorityQueue
 
-data class PathNode<T>(val data: T) {
+data class PathNode<T>(val data: T) : Iterable<PathNode<T>> {
 
     var gScore: Double = Double.MAX_VALUE
     var fScore: Double = Double.MAX_VALUE
     var cameFrom: PathNode<T>? = null
+
+    /**
+     * Iterate from current node to start
+     */
+    override fun iterator() = object : Iterator<PathNode<T>> {
+        var current: PathNode<T>? = this@PathNode
+
+        override fun hasNext() = current != null
+        override fun next() = current!!.also { current = it.cameFrom }
+    }
 }
 
 data class Distance(val index: Int, val d: Double)
@@ -22,7 +32,7 @@ class Graph<T>(private val data: List<T>, private val distances: List<Iterable<D
 
         val openSet = PriorityQueue<IndexedValue<PathNode<T>>>(compareBy { it.value.fScore })
 
-        with(nodes[start]) {
+        nodes[start].apply {
             gScore = 0.0
             fScore = h(data)
             openSet += IndexedValue(start, this)
@@ -36,10 +46,10 @@ class Graph<T>(private val data: List<T>, private val distances: List<Iterable<D
 
             distances[current.index].forEach {
                 val tentativeGScore = current.value.gScore + it.d
-                with(nodes[it.index]) {
+                nodes[it.index].apply {
                     if (tentativeGScore < gScore) {
                         gScore = tentativeGScore
-                        fScore = gScore + h(this.data)
+                        fScore = gScore + h(data)
                         cameFrom = current.value
 
                         // PriorityQueue is not a set - we need to remove and add changed nodes for correct sorting and set semantics
@@ -49,16 +59,6 @@ class Graph<T>(private val data: List<T>, private val distances: List<Iterable<D
                 }
             }
         }
-        return traceback(nodes[goal])
-    }
-
-    private fun traceback(target: PathNode<T>?): List<PathNode<T>> {
-        val path = mutableListOf<PathNode<T>>()
-        var pathNode = target
-        while (pathNode != null) {
-            path += pathNode
-            pathNode = pathNode.cameFrom
-        }
-        return path.reversed()
+        return nodes[goal].reversed()
     }
 }
