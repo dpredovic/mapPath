@@ -10,10 +10,10 @@ data class PathNode<T>(val data: T) : Iterable<PathNode<T>> {
      * Iterate from current node to start
      */
     override fun iterator() = object : Iterator<PathNode<T>> {
-        var current: PathNode<T>? = this@PathNode
+        var next: PathNode<T>? = this@PathNode
 
-        override fun hasNext() = current != null
-        override fun next() = current!!.also { current = it.cameFrom }
+        override fun hasNext() = next != null
+        override fun next() = next!!.also { next = it.cameFrom }
     }
 }
 

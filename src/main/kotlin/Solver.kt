@@ -7,8 +7,8 @@ class Solver(private val map2D: Map2D) {
     private val indexMap = map2D.traversablePoints.mapIndexed { i, n -> n to i }.toMap()
 
     init {
-        val distances = map2D.traversablePoints.map { p ->
-            map2D.neighbors(p).map { Distance(indexMap.getValue(it), map2D.distance(p, it)) }
+        val distances = indexMap.map { e ->
+            map2D.neighbors(e.key).map { Distance(indexMap.getValue(it), map2D.distance(e.key, it)) }
         }
         graph = Graph(map2D.traversablePoints, distances)
     }

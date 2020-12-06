@@ -9,12 +9,10 @@ fun main() {
 
 private object TestScenarios {
 
-    private const val rootPath = "src/main/maps/"
     private val solverCache = Cache<String, Solver> { Solver(Map2D(it)) }
 
-    fun runAllScenarioFiles() {
-        File(rootPath).listFiles { f -> f.extension == "scen" }!!.forEach { solve(load(it), it.name) }
-    }
+    fun runAllScenarioFiles() = File("src/main/maps/").listFiles { f -> f.extension == "scen" }!!.sortedArray()
+        .forEach { solve(load(it), it.name) }
 
     private fun solve(scenarios: Collection<Scenario>, name: String) {
         val pbb =
@@ -25,7 +23,7 @@ private object TestScenarios {
     }
 
     private fun solve(scenario: Scenario) {
-        val solver = solverCache[rootPath + scenario.filename]
+        val solver = solverCache[scenario.filename]
         val path = solver.solve(scenario.start, scenario.end)
 
         val score = path.last().gScore
@@ -44,7 +42,7 @@ private object TestScenarios {
         reader.lineSequence().map {
             val parts = it.split("\t")
             Scenario(
-                parts[1],
+                f.resolveSibling(parts[1]).path,
                 Point(parts[4].toInt(), parts[5].toInt()),
                 Point(parts[6].toInt(), parts[7].toInt()),
                 parts[8].toDouble()
